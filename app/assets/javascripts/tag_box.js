@@ -35,11 +35,15 @@ JS.View = (function(){
     });
 
     $(document).on("click", function(event) {
-      placeBox();
-    });
-
-    $(document).on("click", "li", function(event) {
-      selectChar();
+      
+      if($(event.target).prop("tagName") === "LI"){
+        selectChar();
+      }
+      else{
+        placeBox();
+        postTagBox();
+      }
+    
     });
 
     $("body").on("mouseenter", "ul li", function (event){
@@ -49,6 +53,16 @@ JS.View = (function(){
     $("body").on("mouseout", "ul li", function (event){
       $(event.target).removeClass("bg-info");
     });
+  }
+
+  var postTagBox = function(){
+
+    $.ajax({
+
+      url
+
+    })
+
   }
 
   var moveBox = function() {
