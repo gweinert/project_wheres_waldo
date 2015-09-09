@@ -6,12 +6,12 @@ JS.View = (function(){
   var currentTagBox;
   var $tagBox;
   var characters = ["Waldo", "Wenda", "Odlaw", "wilma", "Wizard Whitebeard", "Woof"];
+  var boxesLeft = 6;
   var $charList;
 
   function init(){
     _startMouseOverListener();
     createNewTagBox(0, 0);
-    buildCharacterList();
   }
 
   function TagBox(x, y){
@@ -37,6 +37,18 @@ JS.View = (function(){
     $(document).on("click", function(event) {
       placeBox();
     });
+
+    $(document).on("click", "li", function(event) {
+      selectChar();
+    });
+
+    $("body").on("mouseenter", "ul li", function (event){
+      $(event.target).addClass("bg-info");
+    });
+
+    $("body").on("mouseout", "ul li", function (event){
+      $(event.target).removeClass("bg-info");
+    });
   }
 
   var moveBox = function() {
@@ -46,17 +58,36 @@ JS.View = (function(){
   };
 
   var placeBox = function () {
-    createNewTagBox(event.pageX, event.pageY);
-    displayCharList();
+    if (boxesLeft == characters.length && boxesLeft > 0) {
+      createNewTagBox(event.pageX, event.pageY);
+      buildCharacterList();
+      displayCharList();
+      boxesLeft--;
+    };
 
+  };
+
+  var selectChar = function () {
+    var characterName = $(event.target).text();
+    var index = $.inArray(characterName, characters)
+    characters.splice(index, 1)
+    var target = $(".tag-box").eq(-2)
+    $("<div class = 'char' >" + characterName + "</div>").appendTo(target).css({
+      "top": target.height()
+    })
+    $charList.slideUp(700);
+    // newChar.css({
+    //   "top": currentTagBox.y + currentTagBox.height/2,
+    //   "left": currentTagBox.x - currentTagBox.width/2,
+    // })
   };
 
   function buildCharacterList(){
     $charList = $('<ul class="char-list"></ul>');
     $charList.appendTo('body').css({
-                                    "top": currentTagBox.y + currentTagBox.height/2,
-                                    "left": currentTagBox.x - currentTagBox.width/2,
-                                    "display": "none"
+      "top": currentTagBox.y + currentTagBox.height/2,
+      "left": currentTagBox.x - currentTagBox.width/2,
+      "display": "none"
     });
 
     for(var i = 0; i < characters.length ; i++ ){
